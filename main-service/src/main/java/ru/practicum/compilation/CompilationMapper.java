@@ -18,4 +18,6 @@ public interface CompilationMapper{
     Compilation fromNewToModel(NewCompilationDto compilation, List<Event> newEvents);
 
     CompilationDto fromModelToDto(Compilation compilation);
+
+    List<CompilationDto> fromModelListToDto(List<Compilation> compilations);
 }

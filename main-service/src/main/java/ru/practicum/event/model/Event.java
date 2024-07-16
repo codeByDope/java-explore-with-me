@@ -1,6 +1,7 @@
 package ru.practicum.event.model;
 
 import lombok.*;
+import org.hibernate.annotations.Formula;
 import ru.practicum.category.model.Category;
 import ru.practicum.location.model.Location;
 import ru.practicum.user.model.User;
@@ -58,4 +59,8 @@ public class Event {
 
     @Enumerated(EnumType.STRING)
     private EventState state;
+
+    @Formula(value = "select count(r.*) from requests as r " +
+            "where r.event_id = id and r.status = 'CONFIRMED'")
+    private Integer confirmedRequests;
 }
