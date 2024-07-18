@@ -21,9 +21,9 @@ public class PublicCompilationController {
     private final PublicCompilationService service;
 
     @GetMapping
-    ResponseEntity<List<CompilationDto>> get(@RequestParam Boolean pinned,
-                                            @RequestParam(defaultValue = "0") @PositiveOrZero Long from,
-                                            @RequestParam(defaultValue = "10") @Positive Long size) {
+    ResponseEntity<List<CompilationDto>> get(@RequestParam(required = false) Boolean pinned,
+                                             @RequestParam(defaultValue = "0") @PositiveOrZero Long from,
+                                             @RequestParam(defaultValue = "10") @Positive Long size) {
         log.info("Были запрошены подборки, закреплены?: {}", pinned);
         return ResponseEntity.ok(service.get(pinned, from, size));
     }

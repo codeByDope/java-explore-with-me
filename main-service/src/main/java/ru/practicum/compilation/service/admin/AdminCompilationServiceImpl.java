@@ -29,6 +29,9 @@ public class AdminCompilationServiceImpl implements AdminCompilationService {
         if (compilation.getEvents() != null) {
             events = findEventsByIds(compilation.getEvents());
         }
+        if (compilation.getPinned() == null) {
+            compilation.setPinned(false);
+        }
 
         Compilation compilationForSave = mapper.fromNewToModel(compilation, events);
         Compilation result = repository.save(compilationForSave);

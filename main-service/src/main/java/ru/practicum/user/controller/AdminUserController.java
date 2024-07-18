@@ -9,6 +9,7 @@ import ru.practicum.user.dto.NewUserDto;
 import ru.practicum.user.dto.UserDto;
 import ru.practicum.user.service.AdminUserService;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
@@ -22,7 +23,7 @@ public class AdminUserController {
     private final AdminUserService service;
 
     @GetMapping
-    public ResponseEntity<List<UserDto>> get(@RequestParam List<Long> ids,
+    public ResponseEntity<List<UserDto>> get(@RequestParam(required = false) List<Long> ids,
                                              @RequestParam(defaultValue = "0") @PositiveOrZero Long from,
                                              @RequestParam(defaultValue = "10") @Positive Long size) {
         log.info("Были запрошены пользователи с ID {}", ids);
@@ -32,7 +33,7 @@ public class AdminUserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDto> save(@RequestBody NewUserDto newUser) {
+    public ResponseEntity<UserDto> save(@RequestBody @Valid NewUserDto newUser) {
         log.info("Создание нового пользователя: {}", newUser);
         UserDto result = service.save(newUser);
 

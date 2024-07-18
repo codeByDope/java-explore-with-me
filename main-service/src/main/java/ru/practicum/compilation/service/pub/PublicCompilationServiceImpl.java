@@ -21,11 +21,11 @@ public class PublicCompilationServiceImpl implements PublicCompilationService {
 
     @Override
     public List<CompilationDto> get(Boolean pinned, Long from, Long size) {
-        int page = (int) (from/size);
+        int page = (int) (from / size);
         Pageable pageable = PageRequest.of(page, size.intValue());
         List<Compilation> compilations;
 
-        if (pinned = null) {
+        if (pinned == null) {
             compilations = repository.findAll(pageable).getContent();
         } else if (pinned) {
             compilations = repository.findByPinnedTrue(pageable).getContent();

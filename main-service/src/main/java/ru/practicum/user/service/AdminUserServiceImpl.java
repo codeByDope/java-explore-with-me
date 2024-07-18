@@ -24,7 +24,13 @@ public class AdminUserServiceImpl implements AdminUserService {
         int page = (int) (from / size);
         Pageable pageable = PageRequest.of(page, size.intValue());
 
-        List<User> result = repository.findByIdIn(ids, pageable).getContent();
+        List<User> result;
+
+        if (ids == null) {
+            result = repository.findAll(pageable).getContent();
+        } else {
+            result = repository.findByIdIn(ids, pageable).getContent();
+        }
 
         return mapper.modelListToDto(result);
     }

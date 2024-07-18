@@ -15,4 +15,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query(value = "SELECT u.id FROM User u")
     List<Long> findAllId();
+
+    Page<User> findAll(Pageable pageable);
 }

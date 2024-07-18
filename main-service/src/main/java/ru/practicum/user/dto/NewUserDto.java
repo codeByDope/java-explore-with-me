@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @ToString
@@ -15,10 +16,12 @@ import javax.validation.constraints.Size;
 public class NewUserDto {
     @NotBlank
     @Size(min = 2, max = 250)
+    @NotNull
     private String name;
 
     @NotBlank
     @Size(min = 6, max = 254)
     @Email
+    @NotNull
     private String email;
 }

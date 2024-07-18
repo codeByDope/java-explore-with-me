@@ -35,7 +35,7 @@ public class AdminCompilationController {
     }
 
     @PatchMapping("/{compId}")
-    public ResponseEntity<CompilationDto> update(@RequestBody UpdateCompilationDto updateCompilation,
+    public ResponseEntity<CompilationDto> update(@RequestBody @Valid UpdateCompilationDto updateCompilation,
                                                  @PathVariable Long compId) {
         log.info("Обновление подборки с ID {}", compId);
         CompilationDto result = service.update(updateCompilation, compId);
