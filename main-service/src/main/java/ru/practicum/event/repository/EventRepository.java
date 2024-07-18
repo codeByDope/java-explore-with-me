@@ -31,17 +31,26 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     Page<Event> findAllByInitiatorIdInAndStateInAndCategoryIdIn(List<Long> users, List<EventState> states,
                                                                 List<Long> categories, Pageable pageable);
 
-    @Query(value = "select e from Event as e " +
-            "where (:text is null or ((lower(e.annotation) like lower(concat('%',:text,'%'))) " +
-            "or (lower(e.description) like lower(concat('%',:text,'%'))))) " +
+    @Query("SELECT e FROM Event e " +
+            "WHERE (:text is null or ((lower(e.annotation) like lower(concat('%',:text,'%'))) or (lower(e.description) like lower(concat('%',:text,'%'))))) " +
             "and e.category.id in (:categories) " +
-            "and (:paid is null or e.paid = :paid) " +
+            "and (cast(:paid as boolean) is null or e.paid = :paid) " +
             "and e.eventDate > :start " +
-            "and (:end is null or e.eventDate < :end) " +
+            "and (cast(:end as timestamp) is null or e.eventDate < :end) " +
             "and e.state = 'PUBLISHED' " +
-            "and (:onlyAvailable is null or e.requestModeration = false or e.participantLimit = 0 " +
-            "or e.participantLimit > e.confirmedRequests)")
-    Page<Event> search(@Param("text") String text, @Param("categories") List<Long> categories, @Param("paid") Boolean paid,
-                       @Param("start") LocalDateTime start, @Param("end") LocalDateTime end,
-                       @Param("onlyAvailable") boolean onlyAvailable, Pageable pageable);
+            "and (cast(:onlyAvailable as boolean) = false or e.participantLimit = 0 " +
+            "or e.participantLimit > (SELECT COUNT(r) FROM Request r WHERE r.event.id = e.id AND r.status = 'CONFIRMED'))")
+    Page<Event> search(@Param("text") String text,
+                       @Param("categories") List<Long> categories,
+                       @Param("paid") Boolean paid,
+                       @Param("start") LocalDateTime rangeStart,
+                       @Param("end") LocalDateTime rangeEnd,
+                       @Param("onlyAvailable") Boolean onlyAvailable,
+                       Pageable pageable);
+
+
+
+
+    @Query("SELECT COUNT(r.id) FROM Request r WHERE r.event.id = :eventId AND r.status = 'CONFIRMED'")
+    Integer countConfirmedRequestsByEventId(@Param("eventId") Long eventId);
 }

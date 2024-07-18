@@ -32,10 +32,10 @@ public class Event {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    @JoinColumn(name = "created_on", nullable = false)
+    @Column(name = "created_on", nullable = false)
     private LocalDateTime created;
 
-    @JoinColumn(name = "event_date", nullable = false)
+    @Column(name = "event_date", nullable = false)
     private LocalDateTime eventDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -48,19 +48,18 @@ public class Event {
 
     private Boolean paid;
 
-    @JoinColumn(name = "participant_limit", nullable = false)
+    @Column(name = "participant_limit", nullable = false)
     private Long participantLimit;
 
-    @JoinColumn(name = "published_on")
+    @Column(name = "published_on")
     private LocalDateTime published;
 
-    @JoinColumn(name = "request_moderation", nullable = false)
+    @Column(name = "request_moderation", nullable = false)
     private Boolean requestModeration;
 
     @Enumerated(EnumType.STRING)
     private EventState state;
 
-    @Formula(value = "select count(r.*) from requests as r " +
-            "where r.event_id = id and r.status = 'CONFIRMED'")
+    @Transient
     private Integer confirmedRequests;
 }

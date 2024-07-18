@@ -11,5 +11,5 @@ import lombok.*;
 public class UserShortDto {
     private Long id;
 
-    private Long name;
+    private String name;
 }

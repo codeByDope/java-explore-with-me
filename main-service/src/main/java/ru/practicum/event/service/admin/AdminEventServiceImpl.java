@@ -23,6 +23,7 @@ import ru.practicum.user.repository.UserRepository;
 import javax.validation.ValidationException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -64,7 +65,13 @@ public class AdminEventServiceImpl implements AdminEventService {
             events = repository.findAllByInitiatorIdInAndStateInAndCategoryIdIn(users, states, categories, pageable).getContent();
         }
 
-        return mapper.modelListToFullDto(events);
+        List<EventFullDto> result = mapper.modelListToFullDto(events);
+
+        result = result.stream()
+                .peek(event -> event.setConfirmedRequests(getConfirmedRequests(event.getId())))
+                .collect(Collectors.toList());
+
+        return result;
     }
 
     @Override
@@ -138,6 +145,12 @@ public class AdminEventServiceImpl implements AdminEventService {
 
         EventFullDto result = mapper.toEventFullDto(repository.save(event));
 
+        result.setConfirmedRequests(getConfirmedRequests(result.getId()));
+
         return result;
+    }
+
+    private Integer getConfirmedRequests(Long eventId) {
+        return repository.countConfirmedRequestsByEventId(eventId);
     }
 }

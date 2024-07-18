@@ -17,10 +17,8 @@ public interface EventMapper {
     @Mapping(target = "category.id", source = "newEventDto.category")
     Event toEvent(NewEventDto newEventDto);
 
-    @Mapping(target = "confirmedRequests", source = "event.confirmedRequests")
     EventFullDto toEventFullDto(Event event);
 
-    @Mapping(target = "confirmedRequests", source = "event.confirmedRequests")
     EventShortDto toEventShortDto(Event event);
 
     List<EventShortDto> modelListToEventShortDto(List<Event> events);

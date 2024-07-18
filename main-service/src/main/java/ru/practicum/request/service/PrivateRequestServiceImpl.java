@@ -43,15 +43,14 @@ public class PrivateRequestServiceImpl implements PrivateRequestService{
                 .orElseThrow(() -> new NotFoundException(String.format("User with id=%s was not found", userId)));
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException(String.format("Event with id=%s was not found", eventId)));
-
+        Long confirmedRequests = (long) eventRepository.countConfirmedRequestsByEventId(eventId);
         if (userId == event.getInitiator().getId()) {
             throw new DataIntegrityViolationException("Initiator can't add a request to his event");
         }
         if (!event.getState().equals(EventState.PUBLISHED)) {
             throw new DataIntegrityViolationException("Event must have status published");
         }
-        if (event.getParticipantLimit() != 0 && event.getParticipantLimit()
-                .equals(event.getConfirmedRequests())) {
+        if (event.getParticipantLimit() != 0 && event.getParticipantLimit().equals(confirmedRequests)) {
             throw new DataIntegrityViolationException("The participant limit has been reached");
         }
 
@@ -61,7 +60,7 @@ public class PrivateRequestServiceImpl implements PrivateRequestService{
                 .requester(user)
                 .build();
 
-        if (!event.getRequestModeration()) {
+        if (!event.getRequestModeration() || event.getParticipantLimit() == 0) {
             request.setStatus(RequestStatus.CONFIRMED);
         } else {
             request.setStatus(RequestStatus.PENDING);

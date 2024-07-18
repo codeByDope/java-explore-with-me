@@ -61,6 +61,18 @@ public class PrivateEventServiceImpl implements PrivateEventService {
                     "Value: " + newEventDto.getEventDate());
         }
 
+        if (newEventDto.getPaid() == null) {
+            newEventDto.setPaid(false);
+        }
+
+        if (newEventDto.getParticipantLimit() == null) {
+            newEventDto.setParticipantLimit(0L);
+        }
+
+        if (newEventDto.getRequestModeration() == null) {
+            newEventDto.setRequestModeration(true);
+        }
+
         User initiator = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(String.format("User with id=%s was not found", userId)));
 
@@ -180,6 +192,7 @@ public class PrivateEventServiceImpl implements PrivateEventService {
 
         Event event = repository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException(String.format("Event with id=%d was not found", eventId)));
+        event.setConfirmedRequests(repository.countConfirmedRequestsByEventId(eventId));
 
         List<Request> requests = requestRepository.findAllByIdIn(requestStatusUpdate.getRequestIds());
 

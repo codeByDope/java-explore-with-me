@@ -62,10 +62,10 @@ public class PublicEventServiceImpl implements PublicEventService {
         List<EventShortDto> result = mapper.modelListToEventShortDto(events);
         result = result.stream()
                 .peek(event -> event.setViews(views.getOrDefault(event.getId(), 0L)))
+                .peek(event -> event.setConfirmedRequests(getConfirmedRequests(event.getId())))
                 .collect(Collectors.toList());
 
         sendHit(request);
-
 
         if (sort != null && sort == SortState.EVENT_DATE) {
             result = result.stream()
@@ -80,6 +80,7 @@ public class PublicEventServiceImpl implements PublicEventService {
         return result;
     }
 
+
     @Override
     public EventFullDto getById(Long eventId, HttpServletRequest request) {
         Event event = repository.findById(eventId)
@@ -91,6 +92,7 @@ public class PublicEventServiceImpl implements PublicEventService {
         Map<Long, Long> views = getViews(List.of(event));
 
         EventFullDto result = mapper.toEventFullDto(event);
+        result.setConfirmedRequests(getConfirmedRequests(result.getId()));
         result.setViews(views.getOrDefault(event.getId(), 0L));
 
         sendHit(request);
@@ -130,5 +132,9 @@ public class PublicEventServiceImpl implements PublicEventService {
                 .ip(request.getRemoteAddr())
                 .timestamp(LocalDateTime.now())
                 .build());
+    }
+
+    private Integer getConfirmedRequests(Long eventId) {
+        return repository.countConfirmedRequestsByEventId(eventId);
     }
 }

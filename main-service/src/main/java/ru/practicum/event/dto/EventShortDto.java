@@ -22,7 +22,7 @@ public class EventShortDto {
 
     private CategoryDto category;
 
-    private Long confirmedRequests;
+    private Integer confirmedRequests;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime eventDate;
