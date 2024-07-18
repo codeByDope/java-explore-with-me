@@ -23,7 +23,7 @@ public class StatsClient {
     private final RestTemplate restTemplate;
 
     @Autowired
-    public StatsClient(@Value("${stats-server:http://localhost:9090}") String serviceUrl, RestTemplateBuilder builder) {
+    public StatsClient(@Value("${STATS-SERVER-URL:http://localhost:9090}") String serviceUrl, RestTemplateBuilder builder) {
         this.restTemplate = builder
                 .uriTemplateHandler(new DefaultUriBuilderFactory(serviceUrl))
                 .requestFactory(HttpComponentsClientHttpRequestFactory::new)
