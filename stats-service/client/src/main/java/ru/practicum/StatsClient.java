@@ -30,7 +30,7 @@ public class StatsClient {
                 .build();
     }
 
-    public void post(RequestDto request) {
+    public void hit(RequestDto request) {
         restTemplate.postForObject("/hit", request, Void.class);
     }
 
