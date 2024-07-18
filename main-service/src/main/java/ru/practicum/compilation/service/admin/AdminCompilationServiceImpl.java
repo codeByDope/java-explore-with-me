@@ -51,7 +51,7 @@ public class AdminCompilationServiceImpl implements AdminCompilationService {
         Compilation compilationForUpdate = repository.findById(compId)
                 .orElseThrow(() -> new NotFoundException(String.format("Compilation with id=%s was not found", compId)));
 
-        if (compilation.getTitle() != null) {
+        if (compilation.getTitle() != null && !compilation.getTitle().isBlank()) {
             compilationForUpdate.setTitle(compilation.getTitle());
         }
         if (compilation.getPinned() != null) {
