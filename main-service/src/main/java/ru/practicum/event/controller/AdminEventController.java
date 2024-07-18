@@ -23,6 +23,7 @@ import java.util.List;
 public class AdminEventController {
     private final AdminEventService service;
     private static final String TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+
     @GetMapping
     public ResponseEntity<List<EventFullDto>> get(
             @RequestParam(required = false) List<Long> users,

@@ -10,7 +10,6 @@ import ru.practicum.compilation.model.Compilation;
 import ru.practicum.compilation.repository.CompilationRepository;
 import ru.practicum.exception.NotFoundException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service

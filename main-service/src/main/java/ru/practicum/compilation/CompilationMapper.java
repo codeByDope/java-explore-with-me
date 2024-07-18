@@ -11,7 +11,7 @@ import ru.practicum.event.model.Event;
 import java.util.List;
 
 @Mapper
-public interface CompilationMapper{
+public interface CompilationMapper {
     CompilationMapper INSTANCE = Mappers.getMapper(CompilationMapper.class);
 
     @Mapping(target = "events", source = "newEvents")

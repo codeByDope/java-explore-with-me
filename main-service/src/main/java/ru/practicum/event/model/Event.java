@@ -1,7 +1,6 @@
 package ru.practicum.event.model;
 
 import lombok.*;
-import org.hibernate.annotations.Formula;
 import ru.practicum.category.model.Category;
 import ru.practicum.location.model.Location;
 import ru.practicum.user.model.User;

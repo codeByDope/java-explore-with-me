@@ -1,9 +1,7 @@
 package ru.practicum.compilation.dto;
 
 import lombok.*;
-import org.springframework.lang.Nullable;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.List;
 
