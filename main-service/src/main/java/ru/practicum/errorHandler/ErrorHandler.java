@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.practicum.exception.NotFoundException;
 
 import javax.validation.ValidationException;
+import java.nio.file.AccessDeniedException;
 import java.util.Arrays;
 
 @RestControllerAdvice
@@ -54,6 +55,17 @@ public class ErrorHandler {
         return ApiError.builder()
                 .message(e.getMessage())
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.toString())
+                .errors(Arrays.toString(e.getStackTrace()))
+                .build();
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ApiError handleAccessDenied(final AccessDeniedException e) {
+        return ApiError.builder()
+                .message(e.getMessage())
+                .reason("The required object is not yours.")
+                .status(HttpStatus.NOT_FOUND.toString())
                 .errors(Arrays.toString(e.getStackTrace()))
                 .build();
     }

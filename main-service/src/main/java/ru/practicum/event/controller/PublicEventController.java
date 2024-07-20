@@ -6,9 +6,11 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.event.dto.CommentDto;
 import ru.practicum.event.dto.EventFullDto;
 import ru.practicum.event.dto.EventShortDto;
 import ru.practicum.event.dto.SortState;
+import ru.practicum.event.service.comment.publ.PublicCommentService;
 import ru.practicum.event.service.publ.PublicEventService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +24,7 @@ import java.util.List;
 @Validated
 public class PublicEventController {
     private final PublicEventService service;
+    private final PublicCommentService commentService;
     private static final String TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     @GetMapping
@@ -48,5 +51,15 @@ public class PublicEventController {
         EventFullDto result = service.getById(id, request);
 
         return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/{id}/comments")
+    public ResponseEntity<List<CommentDto>> getCommentsOfEvent(@PathVariable Long id,
+                                                               @RequestParam(defaultValue = "0") Integer from,
+                                                               @RequestParam(defaultValue = "10") Integer size) {
+        log.info("Запрошены комментарии события {}", id);
+        List<CommentDto> comments = commentService.getByEventId(id, from, size);
+
+        return ResponseEntity.ok(comments);
     }
 }
