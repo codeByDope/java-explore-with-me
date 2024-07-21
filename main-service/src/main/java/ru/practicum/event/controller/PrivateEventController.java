@@ -5,10 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.event.dto.EventFullDto;
-import ru.practicum.event.dto.EventShortDto;
-import ru.practicum.event.dto.NewEventDto;
-import ru.practicum.event.dto.UpdateEventUserRequest;
+import ru.practicum.event.dto.*;
+import ru.practicum.event.service.comment.priv.PrivateCommentService;
 import ru.practicum.event.service.priv.PrivateEventService;
 import ru.practicum.request.dto.EventRequestStatusUpdate;
 import ru.practicum.request.dto.EventRequestStatusUpdateResult;
@@ -26,6 +24,7 @@ import java.util.List;
 @Validated
 public class PrivateEventController {
     private final PrivateEventService service;
+    private final PrivateCommentService commentService;
 
     @GetMapping
     public ResponseEntity<List<EventShortDto>> getAll(@PathVariable Long userId,
@@ -82,5 +81,45 @@ public class PrivateEventController {
         EventRequestStatusUpdateResult result = service.updateStatusRequests(userId, eventId, eventRequestStatusUpdate);
 
         return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/{eventId}/comments")
+    public ResponseEntity<List<CommentDto>> getUsersCommentsForEvent(@PathVariable Long userId,
+                                                                     @PathVariable Long eventId) {
+        log.info("Запрошены комментарии пользователя {} для события {}");
+        List<CommentDto> result = commentService.getByEventIdAndUserId(userId, eventId);
+
+        return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/{eventId}/comments")
+    public ResponseEntity<CommentDto> saveComment(@PathVariable Long userId,
+                                                  @PathVariable Long eventId,
+                                                  @RequestBody @Valid CommentDto commentDto) {
+        log.info("Пользователь {} оставил комментарий событию {} : {}", userId, eventId, commentDto);
+        CommentDto result = commentService.save(userId, eventId, commentDto);
+
+        return ResponseEntity.status(201).body(result);
+    }
+
+    @PatchMapping("/{eventId}/comments/{commentId}")
+    public ResponseEntity<CommentDto> updateComment(@PathVariable Long userId,
+                                                    @PathVariable Long eventId,
+                                                    @PathVariable Long commentId,
+                                                    @RequestBody @Valid CommentDto commentDto) {
+        log.info("Пользователь {} обновляет комментарий {} для события {}", userId, commentId, eventId);
+        CommentDto result = commentService.update(userId, eventId, commentId, commentDto);
+
+        return ResponseEntity.ok(result);
+    }
+
+    @DeleteMapping("/{eventId}/comments/{commentId}")
+    public ResponseEntity<Void> deleteComment(@PathVariable Long userId,
+                                              @PathVariable Long eventId,
+                                              @PathVariable Long commentId) {
+        log.info("Пользователь {} удаляет комментарий {} для события {}", userId, commentId, eventId);
+        commentService.delete(userId, eventId, commentId);
+
+        return ResponseEntity.status(204).build();
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ru.practicum.exception.NoAccessException;
 import ru.practicum.exception.NotFoundException;
 
 import javax.validation.ValidationException;
@@ -54,6 +55,17 @@ public class ErrorHandler {
         return ApiError.builder()
                 .message(e.getMessage())
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.toString())
+                .errors(Arrays.toString(e.getStackTrace()))
+                .build();
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ApiError handleNoAccess(final NoAccessException e) {
+        return ApiError.builder()
+                .message(e.getMessage())
+                .reason("The required object is not yours.")
+                .status(HttpStatus.FORBIDDEN.toString())
                 .errors(Arrays.toString(e.getStackTrace()))
                 .build();
     }
