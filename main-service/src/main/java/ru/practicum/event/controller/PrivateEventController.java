@@ -15,7 +15,6 @@ import ru.practicum.request.dto.ParticipationRequestDto;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
-import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 @RestController

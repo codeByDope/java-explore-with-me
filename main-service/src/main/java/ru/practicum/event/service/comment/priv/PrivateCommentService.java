@@ -2,7 +2,6 @@ package ru.practicum.event.service.comment.priv;
 
 import ru.practicum.event.dto.CommentDto;
 
-import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 public interface PrivateCommentService {

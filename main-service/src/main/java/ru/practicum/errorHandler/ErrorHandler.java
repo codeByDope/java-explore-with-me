@@ -11,7 +11,6 @@ import ru.practicum.exception.NoAccessException;
 import ru.practicum.exception.NotFoundException;
 
 import javax.validation.ValidationException;
-import java.nio.file.AccessDeniedException;
 import java.util.Arrays;
 
 @RestControllerAdvice
