@@ -9,6 +9,7 @@ import ru.practicum.event.model.CommentState;
 import ru.practicum.event.model.Event;
 import ru.practicum.event.repository.CommentRepository;
 import ru.practicum.event.repository.EventRepository;
+import ru.practicum.exception.NoAccessException;
 import ru.practicum.exception.NotFoundException;
 import ru.practicum.user.model.User;
 import ru.practicum.user.repository.UserRepository;
@@ -59,7 +60,7 @@ public class PrivateCommentServiceImpl implements PrivateCommentService {
     }
 
     @Override
-    public CommentDto update(Long userId, Long eventId, Long commentId, CommentDto comment) throws AccessDeniedException {
+    public CommentDto update(Long userId, Long eventId, Long commentId, CommentDto comment) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(String.format("User with id=%s was not found", userId)));
 
@@ -72,7 +73,7 @@ public class PrivateCommentServiceImpl implements PrivateCommentService {
         if (commentForUpdate.getAuthor().getId().equals(userId)) {
             commentForUpdate.setText(comment.getText());
         } else {
-            throw new AccessDeniedException("Access Denied");
+            throw new NoAccessException("Access Denied");
         }
 
         CommentDto result = mapper.toDto(repository.save(commentForUpdate));
@@ -81,7 +82,7 @@ public class PrivateCommentServiceImpl implements PrivateCommentService {
     }
 
     @Override
-    public void delete(Long userId, Long eventId, Long commentId) throws AccessDeniedException {
+    public void delete(Long userId, Long eventId, Long commentId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(String.format("User with id=%s was not found", userId)));
 
@@ -94,7 +95,7 @@ public class PrivateCommentServiceImpl implements PrivateCommentService {
         if (comment.getAuthor().getId().equals(userId)) {
             repository.deleteById(commentId);
         } else {
-            throw new AccessDeniedException("Access Denied");
+            throw new NoAccessException("Access Denied");
         }
     }
 }

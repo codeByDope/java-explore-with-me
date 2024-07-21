@@ -10,7 +10,7 @@ public interface PrivateCommentService {
 
     CommentDto save(Long userId, Long eventId, CommentDto comment);
 
-    CommentDto update(Long userId, Long eventId, Long commentId, CommentDto comment) throws AccessDeniedException;
+    CommentDto update(Long userId, Long eventId, Long commentId, CommentDto comment);
 
-    void delete(Long userId, Long eventId, Long commentId) throws AccessDeniedException;
+    void delete(Long userId, Long eventId, Long commentId);
 }

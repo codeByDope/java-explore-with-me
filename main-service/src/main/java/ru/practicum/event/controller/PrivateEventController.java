@@ -107,7 +107,7 @@ public class PrivateEventController {
     public ResponseEntity<CommentDto> updateComment(@PathVariable Long userId,
                                                     @PathVariable Long eventId,
                                                     @PathVariable Long commentId,
-                                                    @RequestBody @Valid CommentDto commentDto) throws AccessDeniedException {
+                                                    @RequestBody @Valid CommentDto commentDto) {
         log.info("Пользователь {} обновляет комментарий {} для события {}", userId, commentId, eventId);
         CommentDto result = commentService.update(userId, eventId, commentId, commentDto);
 
@@ -117,7 +117,7 @@ public class PrivateEventController {
     @DeleteMapping("/{eventId}/comments/{commentId}")
     public ResponseEntity<Void> deleteComment(@PathVariable Long userId,
                                               @PathVariable Long eventId,
-                                              @PathVariable Long commentId) throws AccessDeniedException {
+                                              @PathVariable Long commentId) {
         log.info("Пользователь {} удаляет комментарий {} для события {}", userId, commentId, eventId);
         commentService.delete(userId, eventId, commentId);
 
